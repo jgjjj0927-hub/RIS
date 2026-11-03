@@ -1,0 +1,24 @@
+# language: yaml, file: .github/workflows/embed.yml — вшивает видео в готовый exe
+name: embed-video
+on: [push, workflow_dispatch]
+
+jobs:
+  embed:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - run: pip install pefile
+
+      - name: Embed
+        run: python embed.py lab.exe promo.mp4 lab_packed.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lab-packed
+          path: lab_packed.exe
+          if-no-files-found: error
